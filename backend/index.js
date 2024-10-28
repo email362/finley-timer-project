@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import 'dotenv/config';
+import path from "path";
 // import dbConn from "../db-connections.json" assert {type: "json"};
 
 const PORT = process.env.PORT;
@@ -14,6 +15,9 @@ import { dailyPottyCount, insertData, readData, readLastData } from "./finDB.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+console.log("__DIR",__dirname);
+console.log("FULL DIR",path.resolve(__dirname,'../frontend/feeding-timer-js'));
 
 // Initialize express app
 const app = express();
@@ -141,7 +145,7 @@ app.post("/", async (req, res) => {
 });
 
 // host html and js files
-app.use('/feeding-timer', express.static('../frontend/feeding-timer-js'));
+app.use('/feeding-timer', express.static(path.resolve(__dirname,'../frontend/feeding-timer-js')));
 // app.use('feeding-timer', express.static(path.resolve(__dirname, '../frontend/feeding-timer-js')));
 
 // set up the route for the frontend timer page
