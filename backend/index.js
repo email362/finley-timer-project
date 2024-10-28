@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 console.log("__DIR",__dirname);
-console.log("FULL DIR",path.resolve(__dirname,'../frontend/feeding-timer-js'));
+console.log("FULL DIR",path.resolve(__dirname,'frontend/feeding-timer-js'));
 
 // Initialize express app
 const app = express();
@@ -145,14 +145,14 @@ app.post("/", async (req, res) => {
 });
 
 // host html and js files
-app.use('/feeding-timer', express.static(path.resolve(__dirname,'../frontend/feeding-timer-js')));
+app.use('/feeding-timer', express.static(path.resolve(__dirname,'frontend/feeding-timer-js')));
 // app.use('feeding-timer', express.static(path.resolve(__dirname, '../frontend/feeding-timer-js')));
 
 // set up the route for the frontend timer page
 app.get("/feeding-timer", (req, res) => {
   // console.log(__dirname);
   // const htmlFilePath = path.resolve("../frontend/feeding-timer-js/index.html");
-  res.sendFile(path.resolve(__dirname,'../frontend/feeding-timer-js/index.html'));
+  res.sendFile(path.resolve(__dirname,'frontend/feeding-timer-js/index.html'));
 });
 
 // host html and js files for potty-counter
