@@ -122,7 +122,7 @@ app.get("/poop", (req, res) => {
 
 app.post("/poop", async (req, res) => {
   console.log(req.body);
-  const newTimeStamp = insertData(req.body.time, 'finleypooptimestamps.txt');
+  const newTimeStamp = await insertData(req.body.time, 'finleypooptimestamps.txt');
   res.status(201).json(newTimeStamp);
 });
 
@@ -140,7 +140,7 @@ app.post("/pee", async (req, res) => {
 
 app.post("/", async (req, res) => {
   console.log(req.body);
-  const newTimeStamp = insertData(req.body.time);
+  const newTimeStamp = await insertData(req.body.time, 'cloud', client);
   res.status(201).json(newTimeStamp);
 });
 

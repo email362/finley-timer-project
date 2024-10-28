@@ -7,26 +7,44 @@ const __dirname = dirname(__filename);
 const filePath = path.join(__dirname, 'finleytimestamps.txt');
 
 // Function to insert data
-export function insertData(milliTime = 0, fileName = 'finleytimestamps.txt') {
-    const file = path.join(__dirname, fileName);
-
+export async function insertData(milliTime = 0, fileName = 'finleytimestamps.txt', conn = null) {
     let currentTime = milliTime === 0 ? Date.now() : milliTime; // Get current Unix time in milliseconds
     let id = 1;
 
-    // Check if the file exists and is not empty
-    if (fs.existsSync(file) && fs.statSync(file).size > 0) {
-        // Read the last line to get the last ID
-        const lines = fs.readFileSync(file, 'utf-8').split('\n');
-        const lastLine = lines[lines.length - 2]; // -2 because the last line is an empty string
-        const lastId = parseInt(lastLine.split(',')[0], 10);
-        id = lastId + 1;
+    if (fileName == 'cloud') {
+        const database = await conn.db("finley-project");
+        const collection = await database.collection("feeding-timestamps");
+
+        const lastDocument = await collection.find().sort({ _id: -1 }).limit(1).toArray();
+
+        const lastItem = lastDocument[0];
+
+        id = lastItem.id + 1;
+
+        const newTime = { id, timestamp: currentTime };
+        const result = await collection.insertOne(newTime);
+
+        return result;
+    } else {
+        const file = path.join(__dirname, fileName);
+    
+        // Check if the file exists and is not empty
+        if (fs.existsSync(file) && fs.statSync(file).size > 0) {
+            // Read the last line to get the last ID
+            const lines = fs.readFileSync(file, 'utf-8').split('\n');
+            const lastLine = lines[lines.length - 2]; // -2 because the last line is an empty string
+            const lastId = parseInt(lastLine.split(',')[0], 10);
+            id = lastId + 1;
+        }
+    
+        const newData = `${id},${currentTime}\n`;
+    
+        // Append the new data to the file
+        fs.appendFileSync(file, newData, 'utf8');
+        console.log(`Data inserted: ID = ${id}, Time = ${currentTime}`);
+        return { newData };
+
     }
-
-    const newData = `${id},${currentTime}\n`;
-
-    // Append the new data to the file
-    fs.appendFileSync(file, newData, 'utf8');
-    console.log(`Data inserted: ID = ${id}, Time = ${currentTime}`);
 }
 
 // Function to read the last inserted data
