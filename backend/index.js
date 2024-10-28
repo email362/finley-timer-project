@@ -152,7 +152,7 @@ app.use('/feeding-timer', express.static(path.resolve(__dirname,'../frontend/fee
 app.get("/feeding-timer", (req, res) => {
   // console.log(__dirname);
   // const htmlFilePath = path.resolve("../frontend/feeding-timer-js/index.html");
-  res.sendFile('index.html');
+  res.sendFile(path.resolve(__dirname,'../frontend/feeding-timer-js/index.html'));
 });
 
 // host html and js files for potty-counter
