@@ -19,7 +19,7 @@ export async function insertData(milliTime = 0, fileName = 'finleytimestamps.txt
 
         const lastItem = lastDocument[0];
 
-        id = lastItem.id + 1;
+        id = parseInt(lastItem.id) + 1;
 
         const newTime = { id, timestamp: currentTime };
         const result = await collection.insertOne(newTime);
