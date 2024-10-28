@@ -6,7 +6,7 @@ const feedButtonID = "feed-button";
 const lastFeedingTimeID = "last-feeding-time-display";
 
 const MAX_TIME = 3600 * 1000 * 4;
-const BASE_URL = "http://127.0.0.1:7300/";
+const BASE_URL = "https://dawn-voice-1395.fly.dev/";
 
 const maxTimerDisplay = document.getElementById(maxTimerDisplayID);
 const newDate = new Date();
