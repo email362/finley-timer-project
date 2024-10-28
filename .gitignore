@@ -1,1 +1,4 @@
 .DS_Store
+db-connections.json
+node_modules
+.env

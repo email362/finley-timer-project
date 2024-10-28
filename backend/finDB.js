@@ -30,7 +30,8 @@ export function insertData(milliTime = 0, fileName = 'finleytimestamps.txt') {
 }
 
 // Function to read the last inserted data
-export function readLastData() {
+export async function readLastData(local=true, conn=null) {
+    if (local) {
     if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {
         console.log('No data found.');
         return { time: null };
@@ -51,13 +52,38 @@ export function readLastData() {
             time: null
         };
     }
+    }
+    else {
+        const database = await conn.db("finley-project");
+        const collection = await database.collection("feeding-timestamps");
+
+        const lastDocument = await collection.find().sort({ _id: -1 }).limit(1).toArray();
+
+        return {
+            time: lastDocument[0].timestamp
+        };
+    }
 }
 
 // Function to read all timestamp data for visualization
-export function readData() {
-    const lines = fs.readFileSync(filePath, 'utf-8').split('\n');
-    lines.pop();
-    const timestamps = lines.map(ts => ts.split(',')[1]);
+export async  function readData(local=true, conn=null) {
+    let timestamps = [];
+    if (local) {
+        const lines = fs.readFileSync(filePath, 'utf-8').split('\n');
+        lines.pop();
+        timestamps = lines.map(ts => ts.split(',')[1]);
+    } else {
+        const database = await conn.db("finley-project");
+        const collection = await database.collection("feeding-timestamps");
+
+        const cursor = await collection.find();
+        console.log("cursor", cursor);
+
+        const arrOfStamps = await cursor.toArray();
+        console.log("arr", arrOfStamps);
+        timestamps = arrOfStamps.map(ts => ts.timestamp);
+
+    }
     return timestamps;
 }
 

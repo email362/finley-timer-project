@@ -1,5 +1,4 @@
-import { insertData, readData, readLastData, dailyPoopCount } from './finDB.js';
-
+import { insertData, readData, readLastData } from './finDB.js';
 // console.log(readLastData());
 
 // readLastData();
@@ -10,4 +9,4 @@ import { insertData, readData, readLastData, dailyPoopCount } from './finDB.js';
 
 // console.log(readData());
 
-console.log(dailyPoopCount());
+// console.log(readData(false, client));

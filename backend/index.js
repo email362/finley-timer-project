@@ -1,8 +1,12 @@
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
+import { MongoClient, ServerApiVersion } from "mongodb";
+import 'dotenv/config';
+// import dbConn from "../db-connections.json" assert {type: "json"};
 
-const PORT = 7300;
+const PORT = process.env.PORT;
+
+console.log("dbConn", process.env);
 
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -17,6 +21,44 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// Replace the placeholder with your Atlas connection string
+const uri = process.env.MONGODB_URI;
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri,  {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    }
+);
+
+
+// async function run() {
+//   try {
+//     // Connect the client to the server (optional starting in v4.7)
+//     await client.connect();
+
+//     const timestamps = await client.db("finley-project").collection("feeding-timestamps").find();
+
+
+
+//     for await (const time of timestamps) {
+//       console.log(time.id, time.timestamp);
+//     }
+
+//     // Send a ping to confirm a successful connection
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//   } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+//   }
+// }
+// run().catch(console.dir);
+
 
 // /**
 //  * Connects to the MongoDB database.
@@ -48,9 +90,9 @@ app.use(cors());
 // // Connect to the database
 // const dbConn = await connectDB();
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   // get all feeding timestamps
-  const { time } = readLastData();
+  const { time } = await readLastData(false, client);
   if (time) {
     res.status(200).json({ time });
   } else {
@@ -58,9 +100,9 @@ app.get("/", (req, res) => {
   }
 });
 
-app.get("/data", (req, res) => {
+app.get("/data", async (req, res) => {
   // get all feeding timestamps
-  const timestamps = readData();
+  const timestamps = await readData(false, client);
   if (timestamps) {
     res.status(200).json({ timestamps });
   } else {

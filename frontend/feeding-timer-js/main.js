@@ -6,10 +6,11 @@ const feedButtonID = "feed-button";
 const lastFeedingTimeID = "last-feeding-time-display";
 
 const MAX_TIME = 3600 * 1000 * 4;
+const BASE_URL = "http://127.0.0.1:7300/";
 
 const maxTimerDisplay = document.getElementById(maxTimerDisplayID);
 const newDate = new Date();
-fetch("http://10.0.0.23:7300/")
+fetch(BASE_URL)
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
@@ -31,7 +32,7 @@ const lastFeedingTimeDisplay = document.getElementById(lastFeedingTimeID);
 
 feedButton.onclick = (e) => {
   const feedDate = new Date();
-  fetch("http://10.0.0.23:7300/", {
+  fetch(BASE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +54,7 @@ feedButton.onclick = (e) => {
 
 const ctx = document.getElementById('myChart');
 
-fetch("http://10.0.0.23:7300/data")
+fetch(`${BASE_URL}data`)
   .then((response) => response.json())
   .then(dataObj => {
     console.log(dataObj);
